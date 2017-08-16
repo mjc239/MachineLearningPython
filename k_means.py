@@ -3,10 +3,16 @@ import numpy as np
 class kmeans():
     """K-means clustering algorithm.
     
-       parameter: 
+       Parameters: 
        X = data points
        N = number of clusters
-       n_init = number of initialisations"""
+       n_init = number of initialisations
+       
+       Returns:
+       best_centroids       = centroids of the found clusters
+       best_centroid_labels = labels for each data point, identifying the
+                               cluster it belongs to
+       """
        
        
     def __init__(self, X, N, n_init):
@@ -80,9 +86,9 @@ class kmeans():
         
         # Initialise to find base distortion level
         best_centroids = self.initialise()
-        centroid_labels = self.assignment_step(best_centroids)
+        best_centroid_labels = self.assignment_step(best_centroids)
         best_distortion = self.distortion_function(best_centroids, \
-            centroid_labels)
+            best_centroid_labels)
         
         
         for i in range(self.n_init):
@@ -96,11 +102,12 @@ class kmeans():
                 old_centroids = centroids
                 centroid_labels = self.assignment_step(centroids)
                 centroids = self.update_step(centroid_labels)
-                
+            
             # Compare distortion of new centroids to previous iterations
             distortion = self.distortion_function(centroids,centroid_labels)
             if distortion < best_distortion:
                 best_centroids = centroids
                 best_distortion = distortion
+                best_centroid_labels = centroid_labels
         
-        return best_centroids    
+        return best_centroids, best_centroid_labels
